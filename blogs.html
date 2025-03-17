@@ -73,6 +73,18 @@
         .read-more:hover {
             text-decoration: underline;
         }
+        .math {
+            font-family: 'Times New Roman', serif;
+        }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Courier New', monospace;
+        }
     </style>
 </head>
 <body>
@@ -86,14 +98,13 @@
         <h1>Blog Posts</h1>
         <ul class="blog-list">
             <li class="blog-item">
-                <h2 class="blog-title">Unsupervised Image Segmentation by Factorization: A Deep Dive into F-Seg</h2>
+                <h2 class="blog-title">Unsupervised Semantic Segmentation with F-Seg</h2>
                 <div class="blog-meta">Posted on March 15, 2025</div>
                 <div class="blog-excerpt">
-                    Introduced a novel perspective by leveraging factorization techniques to achieve high-quality segmentation.
+                    Unsupervised segmentation in digital pathology is a challenging problem. The F-Seg method leverages deep feature factorization (DFF) to extract meaningful concepts from image activations, enabling segmentation without labeled data. In this post, we explore the theoretical foundations of F-Seg, supported by mathematical formulations and practical Python code.
                 </div>
-                <a href="#" class="read-more">Read More →</a>
+                <a href="blog_fseg.html" class="read-more">Read More →</a>
             </li>
-
         </ul>
     </div>
 </body>
