@@ -90,16 +90,16 @@
 
         <h3>Theoretical Background</h3>
 
-        <p>Given an input image \( I \), a deep network extracts activation maps \( A \in \mathbb{R}^{C \times H \times W} \), where \( C \) is the number of feature channels, and \( H \times W \) is the spatial resolution. Our goal is to decompose these activations into a set of interpretable components.</p>
+        <p>Given an input image \( I \), a deep network extracts activation maps \( A \in \mathbb{R}^{C \times rows \times cols} \), where \( C \) is the number of feature channels, and \( rows \times cols \) is the spatial resolution. Our goal is to decompose these activations into a set of interpretable components.</p>
 
-        <p>DFF achieves this via Non-Negative Matrix Factorization (NMF). The activation tensor is reshaped into a matrix \( A \in \mathbb{R}^{C \times (H \cdot W)} \), and we seek a factorization:</p>
+        <p>DFF achieves this via Non-Negative Matrix Factorization (NMF). The activation tensor is reshaped into a matrix \( A \in \mathbb{R}^{C \times (rows \cdot cols)} \), and we seek a factorization:</p>
 
         <p>\[ A \approx W H \]</p>
 
         <p>where:</p>
         <ul>
             <li>\( W \in \mathbb{R}^{C \times K} \) represents the concept basis (semantic components), and</li>
-            <li>\( H \in \mathbb{R}^{K \times (H \cdot W)} \) represents the concept activations per spatial location.</li>
+            <li>\( H \in \mathbb{R}^{K \times (rows \cdot cols)} \) represents the concept activations per spatial location.</li>
         </ul>
 
         <p>The optimization problem solved by NMF is:</p>
