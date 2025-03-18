@@ -159,15 +159,14 @@ def show_segmentation_on_image(img: np.uint8, segmentation: np.ndarray, colors=N
 
         <p>\[ \text{Label}(w_i) = \arg\min_j \frac{w_i \cdot C_j}{\|w_i\| \|C_j\|} \]</p>
 
-        <h3>Solving NMF by Fixing \( H \)</h3>
+        <h3>Solving NMF by Fixing \( W \)</h3>
 
-        <p>An alternative approach in NMF is to fix \( H \) and solve only for \( W \). This is particularly useful when we have a predefined segmentation pattern or prior knowledge about spatial structures. Fixing \( H \) transforms the optimization problem into:</p>
+        <p>In some cases, it is beneficial to fix \( W \) and optimize only for \( H \). This approach assumes that the feature basis remains constant while optimizing the spatial activations. The optimization problem is formulated as:</p>
         
-        <p>\[ \min_{W} \| A - W H \|_F^2 \quad \text{subject to} \quad W \geq 0 \]</p>
+        <p>\[ \min_{H} \| A - W H \|_F^2 \quad \text{subject to} \quad H \geq 0 \]</p>
         
-        <p>In this case, we can iteratively update \( W \) using multiplicative updates or gradient-based optimization while keeping \( H \) constant. This approach is effective when we want to learn only the feature representation while preserving a fixed spatial segmentation structure.</p>
+        <p>This can be solved iteratively using multiplicative updates or gradient descent methods. Fixing \( W \) allows better control over the learned feature representations and enables structured segmentation patterns.</p>
         
-
         <h3>Applying F-Seg</h3>
 
         <pre><code>class FSeg:
