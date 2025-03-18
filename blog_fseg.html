@@ -128,11 +128,6 @@ def dff(activations: np.ndarray, n_components: int = 5):
     H = model.components_.reshape(n_components, batch_size, h, w)
     return W, H.transpose((1, 0, 2, 3))</code></pre>
 
-        <h2>Example Input and Output</h2>
-        <p>Below is an example of an input image and the corresponding segmentation mask generated using DFF:</p>
-            
-        <img src="images/fseg_grayscale_example.png" alt="DFF Segmentation Example" style="width: 50%; height: auto;">
-
         <h2>Visualizing Segmentation</h2>
 
         <p>After factorization, we assign each pixel to the dominant factor, creating a segmentation mask. The following function overlays the segmentation results on the input image.</p>
@@ -149,6 +144,10 @@ def show_segmentation_on_image(img: np.uint8, segmentation: np.ndarray, colors=N
     for category in range(n_categories):
         mask[segmentation == category] = colors[category]
     return np.uint8((float_img * image_weight + mask * (1 - image_weight)) * 255)</code></pre>
+
+    <p>Below is an example of an input image and the corresponding segmentation mask generated using DFF:</p>
+            
+    <img src="images/fseg_color_example.png" alt="DFF Segmentation Example" style="width: 50%; height: auto;">
 
         <h2>F-Seg: From Factorization to Segmentation</h2>
 
