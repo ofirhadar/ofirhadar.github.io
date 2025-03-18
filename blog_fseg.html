@@ -82,9 +82,9 @@
     <div class="container">
         <h1>Unsupervised Semantic Segmentation with F-Seg</h1>
 
-        <img src="images/uni_luad_64.png" alt="F-Seg Pipeline" style="width: 80%; height: auto; display: block; margin: 0 auto;">
-
         <p>Unsupervised segmentation in digital pathology is a challenging problem. The F-Seg method leverages deep feature factorization (DFF) to extract meaningful concepts from image activations, enabling segmentation without labeled data. In this post, we explore the theoretical foundations of F-Seg, supported by mathematical formulations and practical Python code.</p>
+
+        <img src="images/uni_luad_64.png" alt="F-Seg Pipeline" style="width: 50%; height: auto; display: block; margin: 0 auto;">
 
         <h2>Deep Feature Factorization (DFF) and Non-Negative Matrix Factorization (NMF)</h2>
 
@@ -124,9 +124,9 @@ def dff(activations: np.ndarray, n_components: int = 5):
     reshaped_activations = activations.transpose((1, 0, 2, 3)).reshape(activations.shape[1], -1)
     reshaped_activations[np.isnan(reshaped_activations)] = 0
     model = NMF(n_components=n_components, init='random', random_state=0)
-    W = model.fit_transform(reshaped_activations)
-    H = model.components_.reshape(n_components, batch_size, h, w)
-    return W, H.transpose((1, 0, 2, 3))</code></pre>
+    H = model.fit_transform(reshaped_activations)
+    W = model.components_.reshape(n_components, batch_size, h, w)
+    return H, W.transpose((1, 0, 2, 3))</code></pre>
 
         <h2>Visualizing Segmentation</h2>
 
@@ -171,8 +171,8 @@ def show_segmentation_on_image(img: np.uint8, segmentation: np.ndarray, colors=N
 
         <p>This can be solved iteratively using multiplicative updates or gradient descent methods. Fixing \( W \) allows better control over the learned feature representations and enables structured segmentation patterns.</p>
         
-        <h3>Applying F-Seg</h3>
-
+        <h3>Applying F-Seg on a Single Image</h3>
+        
         <pre><code>class FSeg:
     def __init__(self, model, target_layer, reshape_transform=None):
         self.model = model
@@ -187,13 +187,17 @@ def show_segmentation_on_image(img: np.uint8, segmentation: np.ndarray, colors=N
     
     def predict_on_single_image(self, input_tensor: torch.tensor, k: int):
         activations = self.get_activations(input_tensor)
-        _, w = dff(activations, k)
-        segmentation = np.argmax(w[0], axis=0)
+        _, h = dff(activations, k)
+        segmentation = np.argmax(h[0], axis=0)
         return segmentation</code></pre>
+
+        <p>**Note:** In this example, we directly segment the image into components without clustering or fixing a matrix. Clustering or fixing \( W \) is used for evaluation when segmentation into specific predefined categories is necessary.</p>
 
         <h2>Conclusion</h2>
 
         <p>F-Seg enables unsupervised segmentation by leveraging feature factorization. The method decomposes high-dimensional feature spaces into semantic components, making it useful for pathology and other domains where labeled data is scarce. Experiment with different values of \( k \) to observe its effect on segmentation granularity!</p>
+        
+        <p>For more details and implementation, visit our <a href="https://github.com/deepathology/fseg">GitHub repository</a>.</p>
     </div>
 </body>
 </html>
