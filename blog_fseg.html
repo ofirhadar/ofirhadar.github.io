@@ -159,12 +159,16 @@ def show_segmentation_on_image(img: np.uint8, segmentation: np.ndarray, colors=N
 
         <p>\[ \text{Label}(w_i) = \arg\min_j \frac{w_i \cdot C_j}{\|w_i\| \|C_j\|} \]</p>
 
+        <img src="images/fseg_clustering_pipeline.png" alt="F-Seg Clustering Pipeline" style="width: 80%; height: auto; display: block; margin: 0 auto;">
+
         <h3>Solving NMF by Fixing \( W \)</h3>
 
         <p>In some cases, it is beneficial to fix \( W \) and optimize only for \( H \). This approach assumes that the feature basis remains constant while optimizing the spatial activations. The optimization problem is formulated as:</p>
         
         <p>\[ \min_{H} \| A - W H \|_F^2 \quad \text{subject to} \quad H \geq 0 \]</p>
         
+        <img src="images/fseg_fixed_h_pipeline.png" alt="F-Seg with Fixed W Pipeline" style="width: 80%; height: auto; display: block; margin: 0 auto;">
+
         <p>This can be solved iteratively using multiplicative updates or gradient descent methods. Fixing \( W \) allows better control over the learned feature representations and enables structured segmentation patterns.</p>
         
         <h3>Applying F-Seg</h3>
