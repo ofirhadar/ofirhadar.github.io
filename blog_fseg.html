@@ -193,6 +193,16 @@ def show_segmentation_on_image(img: np.uint8, segmentation: np.ndarray, colors=N
 
         <p>**Note:** In this example, we directly segment the image into components without clustering or fixing a matrix. Clustering or fixing \( W \) is used for evaluation when segmentation into specific predefined categories is necessary.</p>
 
+        <h3>One-Shot Segmentation with F-Seg</h3>
+
+        <p>F-Seg can be used for one-shot segmentation. One-shot segmentation allows segmenting images with only one annotated example per category. The process involves:</p>
+        
+        <ol>
+            <li>Selecting one annotation per category and extracting its feature embeddings as matrix \( W \).</li>
+            <li>Fixing \( W \) in the NMF optimization:</li>
+            <li>Using the learned \( H \) to segment new images by aligning them with the predefined categories.</li>
+        </ol>
+        <img src="images/oneshot.png" alt="F-Seg One-Shot Segmentation Example from DeepPathology STUDIO" style="width: 80%; height: auto; display: block; margin: 0 auto;">
         <h2>Conclusion</h2>
 
         <p>F-Seg enables unsupervised segmentation by leveraging feature factorization. The method decomposes high-dimensional feature spaces into semantic components, making it useful for pathology and other domains where labeled data is scarce. Experiment with different values of \( k \) to observe its effect on segmentation granularity!</p>
