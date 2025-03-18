@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+Z<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -69,13 +69,15 @@
             margin-bottom: 20px;
         }
     </style>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
     <div class="nav-bar">
         <a href="index.html">About Me</a>
-        <a href="papers.html">Papers</a>
+        <a href="publications.html">Publications</a>
         <a href="patents.html">Patents</a>
-        <a href="blogs.html">Blogs</a>
+        <a href="blogs.html">Blog</a>
     </div>
     <div class="container">
         <h1>Unsupervised Semantic Segmentation with F-Seg</h1>
@@ -86,23 +88,27 @@
 
         <h3>Theoretical Background</h3>
 
-        <p>Given an input image <span class="math">I</span>, a deep network extracts activation maps <span class="math">A ∈ ℝ<sup>C × H × W</sup></span>, where <span class="math">C</span> is the number of feature channels, and <span class="math">H × W</span> is the spatial resolution. Our goal is to decompose these activations into a set of interpretable components.</p>
+        <p>Given an input image \( I \), a deep network extracts activation maps \( A \in \mathbb{R}^{C \times H \times W} \), where \( C \) is the number of feature channels, and \( H \times W \) is the spatial resolution. Our goal is to decompose these activations into a set of interpretable components.</p>
 
-        <p>DFF achieves this via Non-Negative Matrix Factorization (NMF). The activation tensor is reshaped into a matrix <span class="math">A ∈ ℝ<sup>C × (H · W)</sup></span>, and we seek a factorization:</p>
+        <p>DFF achieves this via Non-Negative Matrix Factorization (NMF). The activation tensor is reshaped into a matrix \( A \in \mathbb{R}^{C \times (H \cdot W)} \), and we seek a factorization:</p>
 
-        <p class="math">A ≈ W H</p>
+        <p>\[ A \approx W H \]</p>
 
         <p>where:</p>
         <ul>
-            <li><span class="math">W ∈ ℝ<sup>C × K</sup></span> represents the concept basis (semantic components), and</li>
-            <li><span class="math">H ∈ ℝ<sup>K × (H · W)</sup></span> represents the concept activations per spatial location.</li>
+            <li>\( W \in \mathbb{R}^{C \times K} \) represents the concept basis (semantic components), and</li>
+            <li>\( H \in \mathbb{R}^{K \times (H \cdot W)} \) represents the concept activations per spatial location.</li>
         </ul>
 
         <p>The optimization problem solved by NMF is:</p>
 
-        <p class="math">min<sub>W, H</sub> ||A - W H||<sub>F</sub><sup>2</sup> subject to W ≥ 0, H ≥ 0</p>
+        <p>\[ \min_{W, H} \| A - W H \|_F^2 \quad \text{subject to} \quad W \geq 0, H \geq 0 \]</p>
 
-        <p>where <span class="math">|| · ||<sub>F</sub></span> denotes the Frobenius norm.</p>
+        <p>where \( \| \cdot \|_F \) denotes the Frobenius norm.</p>
+
+        <h3>Why Non-Negative Matrix Factorization (NMF)?</h3>
+
+        <p>NMF is particularly well-suited for unsupervised segmentation because it ensures that both the basis components and the activations are non-negative. This leads to parts-based representations, which aligns well with the idea of decomposing an image into meaningful segments. Unlike SVD, which allows both positive and negative values, NMF produces interpretable components that resemble actual object parts. Furthermore, compared to other matrix factorization techniques like ICA or SVD, NMF is more robust in extracting localized features, which is crucial in image segmentation tasks where spatial coherence is important.</p>
 
         <h3>Implementation</h3>
 
@@ -143,9 +149,9 @@ def show_segmentation_on_image(img: np.uint8, segmentation: np.ndarray, colors=N
 
         <h3>Clustering Concepts</h3>
 
-        <p>Once we obtain the matrix <span class="math">W</span>, we cluster the feature vectors into distinct semantic groups. Given a set of cluster centroids <span class="math">C</span>, each feature vector <span class="math">w<sub>i</sub></span> is assigned to the nearest cluster using cosine similarity:</p>
+        <p>Once we obtain the matrix \( W \), we cluster the feature vectors into distinct semantic groups. Given a set of cluster centroids \( C \), each feature vector \( w_i \) is assigned to the nearest cluster using cosine similarity:</p>
 
-        <p class="math">Label(w<sub>i</sub>) = argmin<sub>j</sub> (w<sub>i</sub> · C<sub>j</sub>)/(||w<sub>i</sub>|| ||C<sub>j</sub>||)</p>
+        <p>\[ \text{Label}(w_i) = \arg\min_j \frac{w_i \cdot C_j}{\|w_i\| \|C_j\|} \]</p>
 
         <h3>Applying F-Seg</h3>
 
@@ -169,7 +175,7 @@ def show_segmentation_on_image(img: np.uint8, segmentation: np.ndarray, colors=N
 
         <h2>Conclusion</h2>
 
-        <p>F-Seg enables unsupervised segmentation by leveraging feature factorization. The method decomposes high-dimensional feature spaces into semantic components, making it useful for pathology and other domains where labeled data is scarce. Experiment with different values of <span class="math">k</span> to observe its effect on segmentation granularity!</p>
+        <p>F-Seg enables unsupervised segmentation by leveraging feature factorization. The method decomposes high-dimensional feature spaces into semantic components, making it useful for pathology and other domains where labeled data is scarce. Experiment with different values of \( k \) to observe its effect on segmentation granularity!</p>
     </div>
 </body>
 </html>
