@@ -172,11 +172,11 @@ def show_segmentation_on_image(img: np.uint8, segmentation: np.ndarray, colors=N
 
         <h2>F-Seg: From Factorization to Segmentation</h2>
 
-        <p>F-Seg leverages DFF for unsupervised segmentation. The extracted semantic concepts guide the clustering of image regions.</p>
+        <p>F-Seg leverages DFF to extract semantic concepts from images, but concept extraction alone is not sufficient for robust segmentation. To achieve effective segmentation, F-Seg investigates two key approaches: (1) Clustering the extracted concepts into semantically meaningful groups, and (2) Solving the factorization problem with a fixed W matrix to align with predefined categories. These approaches build upon the basic DFF framework to enable more structured and reliable segmentation results.</p>
 
         <h3>Clustering Concepts</h3>
 
-        <p>Once we obtain the matrix \( W \), we cluster the feature vectors into distinct semantic groups. Given a set of cluster centroids \( C \), each feature vector \( w_i \) is assigned to the nearest cluster using cosine similarity:</p>
+        <p>Once we obtain the matrix \( W \), we cluster the feature vectors into distinct semantic groups. Given a set of predefined cluster centroids \( C \), each feature vector \( w_i \) is assigned to the nearest cluster using cosine similarity:</p>
 
         <p>\[ \text{Label}(w_i) = \arg\min_j \frac{w_i \cdot C_j}{\|w_i\| \|C_j\|} \]</p>
 
@@ -184,7 +184,7 @@ def show_segmentation_on_image(img: np.uint8, segmentation: np.ndarray, colors=N
 
         <h3>Solving NMF by Fixing \( W \)</h3>
 
-        <p>In some cases, it is beneficial to fix \( W \) and optimize only for \( H \). This approach assumes that the feature basis remains constant while optimizing the spatial activations. The optimization problem is formulated as:</p>
+        <p>This approach fixes the W matrix, which contains the concept features, and solves NMF only for H. By doing so, we can achieve segmentation into predefined concepts. The optimization problem becomes:</p>
         
         <p>\[ \min_{H} \| A - W H \|_F^2 \quad \text{subject to} \quad H \geq 0 \]</p>
         
@@ -192,25 +192,61 @@ def show_segmentation_on_image(img: np.uint8, segmentation: np.ndarray, colors=N
 
         <p>This can be solved iteratively using multiplicative updates or gradient descent methods. Fixing \( W \) allows better control over the learned feature representations and enables structured segmentation patterns.</p>
         
-        <h3>Applying F-Seg on a Single Image</h3>
+        <h3>Applying F-Seg</h3>
         
-        <pre><code>class FSeg:
-    def __init__(self, model, target_layer, reshape_transform=None):
-        self.model = model
-        self.target_layer = target_layer
-        self.reshape_transform = reshape_transform
-        self.activations_and_grads = ActivationsAndGradients(self.model, [self.target_layer], self.reshape_transform)
-    
-    def get_activations(self, input_tensor: torch.tensor) -> np.ndarray:
-        with torch.no_grad():
-            self.activations_and_grads(input_tensor)
-            return self.activations_and_grads.activations[0].cpu().numpy()
-    
-    def predict_on_single_image(self, input_tensor: torch.tensor, k: int):
-        activations = self.get_activations(input_tensor)
-        _, h = dff(activations, k)
-        segmentation = np.argmax(h[0], axis=0)
-        return segmentation</code></pre>
+        <pre><code># Example 1: Using predict_clustering for semantic segmentation
+import torch
+from torchvision.models import resnet50
+import numpy as np
+from PIL import Image
+import torchvision.transforms as transforms
+
+# Load model and create FSeg instance
+model = resnet50(pretrained=True)
+target_layer = model.layer4[-1]
+fseg = FSeg(model=model, target_layer=target_layer)
+
+# Define cluster centroids (e.g., from prior knowledge or clustering)
+# Here we use example centroids for 3 categories (e.g., background, tissue, tumor)
+cluster_centroids = np.array([
+    [0.2, 0.3, 0.5],  # background features
+    [0.6, 0.2, 0.2],  # tissue features
+    [0.1, 0.7, 0.2]   # tumor features
+])
+clustering_model = ConceptClustering(cluster_centroids)
+
+# Load and preprocess image
+image = Image.open('pathology_sample.jpg')
+transform = transforms.Compose([
+    transforms.Resize((224, 224)),
+    transforms.ToTensor(),
+    transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+])
+input_tensor = transform(image).unsqueeze(0)
+
+# Get clustered segmentation
+segmentation = fseg.predict_clustering(
+    input_tensor=input_tensor,
+    clustering_model=clustering_model,
+    k=10  # number of intermediate concepts
+)
+
+# Example 2: Using predict_project_concepts with fixed concepts
+# Define concept features (e.g., from annotated examples)
+# Here we use example concepts for 3 tissue types
+concept_features = np.array([
+    [0.8, 0.1, 0.1, 0.0, 0.0],  # concept 1 features
+    [0.1, 0.7, 0.1, 0.1, 0.0],  # concept 2 features
+    [0.0, 0.1, 0.1, 0.7, 0.1]   # concept 3 features
+])
+
+# Get segmentation with fixed concepts
+segmentation = fseg.predict_project_concepts(
+    input_tensor=input_tensor,
+    concepts=concept_features
+)
+
+)</code></pre>
 
         <p>**Note:** In this example, we directly segment the image into components without clustering or fixing a matrix. Clustering or fixing \( W \) is used for evaluation when segmentation into specific predefined categories is necessary.</p>
 
