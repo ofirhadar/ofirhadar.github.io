@@ -147,12 +147,7 @@ n_components = 5  # Number of components to factorize into
 H, W = dff(activations, n_components)
 
 segmentation_mask = create_segmentation_mask(W)
-# Visualize first image's segmentation
-plt.figure(figsize=(8, 8))
-plt.imshow(segmentation_mask[0], cmap='tab10')
-plt.colorbar()
-plt.title('Segmentation Mask')
-plt.axis('off')</code></pre>
+</code></pre>
 
         <h2>Visualizing Segmentation</h2>
 
