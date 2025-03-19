@@ -195,11 +195,6 @@ def show_segmentation_on_image(img: np.uint8, segmentation: np.ndarray, colors=N
         <h3>Applying F-Seg</h3>
         
         <pre><code># Example 1: Using predict_clustering for semantic segmentation
-import torch
-from torchvision.models import resnet50
-import numpy as np
-from PIL import Image
-import torchvision.transforms as transforms
 
 # Load model and create FSeg instance
 model = resnet50(pretrained=True)
