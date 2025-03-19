@@ -110,7 +110,7 @@
 
         <h3>Why Non-Negative Matrix Factorization (NMF)?</h3>
 
-        <p>NMF is particularly well-suited for unsupervised segmentation because it ensures that both the basis components and the activations are non-negative. This leads to parts-based representations, which aligns well with the idea of decomposing an image into meaningful segments. Unlike SVD, which allows both positive and negative values, NMF produces interpretable components that resemble actual object parts. Furthermore, compared to other matrix factorization techniques like ICA or SVD, NMF is more robust in extracting localized features, which is crucial in image segmentation tasks where spatial coherence is important.</p>
+        <p>NMF is particularly well-suited for unsupervised segmentation because it ensures that both the basis components and the activations are non-negative. This leads to parts-based representations, which aligns well with the idea of decomposing an image into meaningful segments. Unlike PCA, which allows both positive and negative values, NMF produces interpretable components that resemble actual object parts. Furthermore, compared to other matrix factorization techniques like ICA or SVD, NMF is more robust in extracting localized features, which is crucial in image segmentation tasks where spatial coherence is important.</p>
 
         <h3>Implementation</h3>
 
@@ -125,7 +125,34 @@ def dff(activations: np.ndarray, n_components: int = 5):
     model = NMF(n_components=n_components, init='random', random_state=0)
     H = model.fit_transform(reshaped_activations)
     W = model.components_.reshape(n_components, batch_size, h, w)
-    return H, W.transpose((1, 0, 2, 3))</code></pre>
+    return H, W.transpose((1, 0, 2, 3))
+
+# Create segmentation mask from factorized components
+def create_segmentation_mask(W: np.ndarray) -> np.ndarray:
+    """
+    Creates a segmentation mask by assigning each pixel to the dominant factor.
+    
+    Args:
+        W: Component activations of shape (batch_size, n_components, height, width)
+    Returns:
+        Segmentation mask of shape (batch_size, height, width) with values 0 to n_components-1
+    """
+    # Get the dominant component at each spatial location
+    segmentation = np.argmax(W, axis=1)
+    return segmentation
+
+# Example usage
+activations = np.random.randn(10, 3, 10, 10)  # Example activations
+n_components = 5  # Number of components to factorize into
+H, W = dff(activations, n_components)
+
+segmentation_mask = create_segmentation_mask(W)
+# Visualize first image's segmentation
+plt.figure(figsize=(8, 8))
+plt.imshow(segmentation_mask[0], cmap='tab10')
+plt.colorbar()
+plt.title('Segmentation Mask')
+plt.axis('off')</code></pre>
 
         <h2>Visualizing Segmentation</h2>
 
