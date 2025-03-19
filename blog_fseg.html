@@ -172,7 +172,10 @@ def show_segmentation_on_image(img: np.uint8, segmentation: np.ndarray, colors=N
 
         <h2>F-Seg: From Factorization to Segmentation</h2>
 
-        <p>F-Seg leverages DFF to extract semantic concepts from images, but concept extraction alone is not sufficient for robust segmentation. To achieve effective segmentation, F-Seg investigates two key approaches: (1) Clustering the extracted concepts into semantically meaningful groups, and (2) Solving the factorization problem with a fixed W matrix to align with predefined categories. These approaches build upon the basic DFF framework to enable more structured and reliable segmentation results.</p>
+        <p>F-Seg leverages DFF to extract semantic concepts from images, but concept extraction alone is not sufficient for robust segmentation. To achieve effective segmentation, F-Seg investigates two key approaches: (1) Clustering the extracted concepts into semantically meaningful groups, and (2) Solving the factorization problem with a fixed W matrix to align with predefined categories. These approaches build upon the basic DFF framework to enable more structured and reliable segmentation results. At the end of the pipeline, the factorized segmentation mask is resized to match the shape of
+            the input image. We next propose two methods for utilizing the clustering model centers for consistent
+            concepts.
+            </p>
 
         <h3>Clustering Concepts</h3>
 
