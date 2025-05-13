@@ -90,7 +90,35 @@
             
             We'll discuss these methods individually, then show how they can be combined in multimodal models to improve prediction performance and interpretability.</p>
 
-
+            <section id="introduction">
+                <h1>Predicting Drug Outcomes from WSIs: MIL, Human-Interpretable Features, and Multimodal Fusion</h1>
+              
+                <p>
+                  Drug outcome prediction — such as determining whether a cancer patient will respond to a specific therapy — is one of the most clinically impactful applications of AI in medicine. Accurate models can help personalize treatment, avoid unnecessary side effects, and improve survival. Among the many data sources available, <strong>whole slide images (WSIs)</strong> from pathology offer a unique and underutilized view into the tumor microenvironment.
+                </p>
+              
+                <p>
+                  WSIs are rich, high-resolution images that capture both the morphological and spatial heterogeneity of tissues. They are already used by pathologists for clinical diagnosis and grading, making them a natural candidate for predictive modeling. However, leveraging WSIs in a robust and interpretable way for predicting drug outcomes remains a challenge. This is due to several factors: the gigapixel size of the data, the lack of fine-grained annotations, and the need for models that provide actionable, trustworthy predictions.
+                </p>
+              
+                <p>
+                  In recent years, two dominant modeling paradigms have emerged to tackle this problem:
+                </p>
+              
+                <ul>
+                  <li><strong>Multiple Instance Learning (MIL)</strong>: A deep learning approach that treats WSIs as bags of instances (tiles), trained with only slide- or patient-level labels. MIL is particularly powerful in settings where detailed annotations are not available.</li>
+                  <li><strong>Human-Interpretable Features (HiFs)</strong>: An alternative or complementary approach that extracts domain-informed, biologically meaningful features from tissue (e.g., lymphocyte density, tumor-to-stroma ratio, necrosis) and uses them as inputs to predictive models. These features offer high clinical interpretability.</li>
+                </ul>
+              
+                <p>
+                  While MIL models are typically more expressive and capable of capturing complex visual patterns, HiF-based models offer better transparency and alignment with clinical reasoning. Importantly, these approaches are not mutually exclusive — combining them in a <strong>multimodal framework</strong> allows us to benefit from both: the representation power of deep learning and the interpretability of human-understandable biomarkers.
+                </p>
+              
+                <p>
+                  In this blog post, we will explore these three paradigms — MIL, HiFs, and their fusion — in the context of drug outcome prediction from WSIs. We’ll look at their core methodologies, how they handle different types of drug response endpoints, what loss functions they use, and how they complement each other in practice. Along the way, we’ll also highlight current challenges and promising directions in this exciting area at the intersection of digital pathology, deep learning, and precision oncology.
+                </p>
+              </section>
+              
 
         <h2>Conclusion</h2>
 
